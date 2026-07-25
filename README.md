@@ -45,6 +45,28 @@ mux2  (2:1 MUX)   — gate-level primitives (and/or)
 2. Set `mux16` as the top module.
 3. Run synthesis.
 
+## Alternative implementation (commented out in source)
+
+`16-1MUX.v` also contains two commented-out alternate versions, kept for comparison — worth understanding even though they're not the active implementation:
+
+**Fully behavioral, no hierarchy at all:**
+```verilog
+module mux16 (input wire [15:0] data, input wire [3:0] S, output wire Out);
+assign Out = data[S];
+endmodule
+```
+Instead of building the MUX out of smaller MUXes, this uses Verilog's bit-select indexing directly: `S` picks which bit of `data` to route to `Out`. Functionally identical to the full gate-level hierarchy above, in a single line — but it hides the underlying structure a synthesis tool would still build, rather than expressing it explicitly. *(Note: the version as commented references a signal `sel` that doesn't exist in the port list — it should read `data[S]`, matching the declared port name.)*
+
+**Behavioral 2:1 MUX for wide buses:**
+```verilog
+module mux64 (input wire [63:0] a, b, input wire sel, output wire [63:0] y);
+assign y = sel ? b : a;
+endmodule
+```
+A ternary-operator MUX selecting between two 64-bit buses. Since there are only two inputs to choose from, `sel` only needs to be 1 bit — no need for a select vector like `S[3:0]` in the 16:1 case.
+
+**Why keep the hierarchical (`mux2`/`mux4`/`mux16`) version as the main implementation:** it mirrors how a 16:1 MUX would actually be built from discrete logic gates, and demonstrates structural/hierarchical design — the `assign Out = data[S];` one-liner is far more concise, but it lets Verilog's synthesis tool make all the structural decisions for you rather than practicing them yourself.
+
 ## Notes
 
 - The testbench currently applies test vectors and prints results via `$monitor`, but does not yet do automated pass/fail comparison against expected values — worth adding (similar in spirit to the `checking` task pattern used in the adder project) if you want it to flag mismatches automatically rather than checking the printed output by eye.
