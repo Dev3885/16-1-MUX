@@ -1,0 +1,42 @@
+# ---- Vivado project/build clutter ----
+*.jou
+*.log
+*.str
+*.xpr
+.Xil/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.runs/
+*.sim/
+*.srcs/sources_1/bd/
+*.gen/
+*.mif
+NA.*
+vivado*.jou
+vivado*.log
+webtalk*.jou
+webtalk*.log
+usage_statistics_webtalk.html
+usage_statistics_webtalk.xml
+.hbs
+*.wdb
+*.pb
+*.dcp
+*.bit
+*.ltx
+*.dmp
+
+# ---- Simulation waveform/artifacts ----
+*.vcd
+*.wlf
+*.fsdb
+*.out
+xsim.dir/
+webtalk_pa/
+
+# ---- OS / editor clutter ----
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
